@@ -30,8 +30,8 @@ Route::get('cards/{card}', 'CardsController@show');
 
 Route::post('cards/{card}/notes', 'NotesController@store');
 
-Route::delete('cards/{card}/updatednotes', 'NotesController@delete');
+//Route::get('cards/{card}/updatednotes', 'NotesController@delete');
 
-//Route::get('cards/{card}/notes/{note}/edit', 'NotesController@edit');
+Route::post('cards/{card}/notes/{note}', 'NotesController@delete');
 
 
