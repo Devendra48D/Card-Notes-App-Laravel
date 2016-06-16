@@ -42,9 +42,9 @@
 	  				<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
 				</button>
 
-				<a href="/cards/{{$card->id}}/notes/{{$note->id}}/edit"><button id="{{'upd_' . $note->id }}" type="button" class="btn btn-default btn-sm pull-right" onclick="changeAction()">
+				<button id="{{'upd_' . $note->id }}" type="button" class="btn btn-default btn-sm pull-right" onclick="changeAction()">
 	  				<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-				</button></a>
+				</button>
 			</div>
 			
 		</li>
