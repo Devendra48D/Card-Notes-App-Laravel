@@ -32,4 +32,6 @@ Route::post('cards/{card}/notes', 'NotesController@store');
 
 Route::delete('cards/{card}/updatednotes', 'NotesController@delete');
 
+Route::get('cards/{card}/notes/{note}/edit', 'NotesController@edit');
+
 
