@@ -5,8 +5,8 @@
 
 <h3 id="action-header">Add a new note</h3>
 
-<form method="POST" action="/cards/{{ $card->id }}/notes">
-	<!--{{ csrf_field() }}-->
+<!-- <form method="POST" action="/cards/{{ $card->id }}/notes">
+ -->	<!--{{ csrf_field() }}-->
 	<input type="hidden" name="_token" id="_csrf" value="{{csrf_token()}}">
 	<input type="hidden" name="_action" id="_action" value="save">
 	<input type="hidden" name="_card_id" id="_card_id" value="{{$card->id}}">
@@ -20,7 +20,7 @@
 	<div class="form-group">
 		<button type="submit" id="action-button" class="btn btn-primary">Add Note</button>
 	</div>
-</form>
+<!-- </form> -->
 
 <hr>
 
@@ -60,6 +60,33 @@
 @endsection 
 @section('script')
 	<script>
+
+		$("#action-button").click(function() {
+			var token = $("#_csrf").val();
+			
+			var card_id = $("#_card_id").val();
+			var url = "/cards/"+card_id+"/new_note";
+
+			var note = $("#note").val();
+			var action = $("#_action").val();
+			var id =  $("#_id").val();
+
+
+			var data={
+				_token:token,
+				note: note,
+				_card_id: card_id,
+				_action: action,
+				_id: id 
+			};
+
+			$.post(url, data, function(data, status){
+		        var id = data;
+		    });
+
+		});
+
+
 		function deleteNote(){
 			event.stopPropagation();
 
@@ -68,7 +95,7 @@
     		var values = tag_id.split("_");
 
 			var note_id = values[1];
-			var card_id = document.getElementById("_card_id").value;
+			var card_id = $("#_card_id").val();
 			var url = "/cards/"+card_id+"/notes/"+note_id;
 			var token = $("#_csrf").val();
 			var data = {
