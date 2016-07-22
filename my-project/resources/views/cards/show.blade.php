@@ -18,12 +18,19 @@
 	</div>
 
 	<div class="form-group">
-		<button type="submit" id="action-button" class="btn btn-primary">Add Note</button>
+		<button id="action-button" class="btn btn-primary">Add Note</button>
+		<button id="action-reset" class="btn btn-success">Add New</button>
 	</div>
 <!-- </form> -->
 
 <hr>
 
+<style type="text/css">
+	#action-reset {
+		visibility: hidden;
+	}
+
+</style>
 
 <div class="row">
 	<div class="col-md-6 col-md-offset-3">
@@ -60,6 +67,15 @@
 @endsection 
 @section('script')
 	<script>
+		var controller = {
+			note:{
+				body:""
+			}
+		};
+
+		$("#action-reset").click(function() {
+			reset();
+		});
 
 		$("#action-button").click(function() {
 			var token = $("#_csrf").val();
@@ -71,6 +87,7 @@
 			var action = $("#_action").val();
 			var id =  $("#_id").val();
 
+			controller.note.body = note;
 
 			var data={
 				_token:token,
@@ -80,8 +97,22 @@
 				_id: id 
 			};
 
+			var copied_data = data;
+
+			
+
 			$.post(url, data, function(data, status){
 		        var id = data;
+		        var body = controller.note.body;
+		        if (copied_data._action != 'update') {
+		        	addNote(id, body);
+		        }
+		        else {
+		        	updateNote(id, body);
+		        	$("#action-reset").css("visibility", "visible");
+		        }
+		       	
+		        body = "";
 		    });
 
 		});
@@ -119,11 +150,37 @@
 		
 		}
 
+		function addNote(id, noteText){
+			var html = '<li id="note_' + id + '" class = "list-group-item">';
+			html += '<div class="">';
+			html += '<span id="txt_' + id +'">';
+
+			html += noteText+ '<button data-id="del_' + id + '" type="button" class="btn btn-danger btn-sm pull-right del-btn">';
+			html += '<span data-id="del_' + id +'" class="glyphicon glyphicon-trash" aria-hidden="true"></span>';
+			html += '</button>';
+
+			html += '<button data-id="upd_' + id + '" type="button" class="btn btn-default btn-sm pull-right upd-btn">';
+			html += '<span data-id="upd_' + id +'" class="glyphicon glyphicon-pencil" aria-hidden="true"></span>';
+			html += '</button>'
+
+			$('.list-group').append(html);
+
+			document.getElementById("note").value = "";
+
+		}
+
+
+		function updateNote(id, noteText) {
+
+			document.getElementById("txt_"+id).innerText = noteText;
+
+
+		}
 
 	    function changeAction()
     	{
     		var target = event.target;
-    		var tag_id = $(target).data("id");
+    		var tag_id = ""+$(target).data("id");
     		var values = tag_id.split("_");
     		if (values.length==2){
     			event.stopPropagation();
@@ -151,14 +208,26 @@
     	}
 
     	function reset()
-    	    {
-    	
-    	    }
+    	{
+    		var action = document.getElementById("_action");
+	    		action.value = "save";
+
+    		var header = document.getElementById("action-header");
+    		header.innerText = "Add a new note";
+
+    		var button = document.getElementById("action-button");
+    		button.innerText = "Add note";
+
+    		document.getElementById("note").value = "";
+
+    		$("#action-reset").css("visibility", "hidden");
+    		
+    	}
     	$(document).ready(function(){
     		//onclick="deleteNote()
     		//onclick="changeAction()"
-    		$(".del-btn").click(deleteNote);
-    		$(".upd-btn").click(changeAction);
+    		$(document).on("click",".del-btn", deleteNote);
+    		$(document).on("click", ".upd-btn", changeAction);
     	})
     	</script>
 @endsection
